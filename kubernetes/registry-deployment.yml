@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  labels:
+    app: registry-deployment
+  name: registry-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: registry-deployment
+  template:
+    metadata:
+      labels:
+        app: registry-deployment
+    spec:
+      volumes:
+      - name: registry-volume
+        persistentVolumeClaim:
+          claimName: registry-pvc
+      - name: setup
+        emptyDir: {}
+      initContainers:
+      - name: setup
+        image: backplane/htpasswd:latest
+        command: ["sh", "-c"]
+        args: ["htpasswd -B -b -n $USERNAME $PASSWORD > /work/credentials"]
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: USERNAME
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: registry-secret
+              key: PASSWORD
+        volumeMounts:
+        - name: setup
+          mountPath: /work/
+      containers:
+      # - image: registry:2 # konradkleine/docker-registry-frontend
+      # - image: registry:2 # jc21/registry-ui
+      - image: registry:2.8.2 # joxit/docker-registry-ui:main
+        name: registry
+        ports:
+        - containerPort: 5000
+        readinessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "1Gi" #
+          limits:
+            cpu: "500m"
+            memory: "2Gi"
+        env:
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          valueFrom:
+            configMapKeyRef:
+              name: registry-configmap
+              key: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+        - name: REGISTRY_AUTH
+          valueFrom:
+            configMapKeyRef:
+              name: registry-configmap
+              key: REGISTRY_AUTH
+        - name: REGISTRY_AUTH_HTPASSWD_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: registry-configmap
+              key: REGISTRY_AUTH_HTPASSWD_REALM
+        - name: REGISTRY_AUTH_HTPASSWD_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: registry-configmap
+              key: REGISTRY_AUTH_HTPASSWD_PATH
+        - name: REGISTRY_HTTP_SECRET
+          value: "o43g2kjgn2iuhv2k4jn2f23f290qfghsdg"
+        - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin
+          value: '[https://view.ankit.study]'
+        - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods
+          value: '[HEAD,GET,OPTIONS,DELETE]'
+        - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Credentials
+          value: '[true]'
+        - name: REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers
+          value: '[Authorization,Accept,Cache-Control]'
+        - name: REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers
+          value: '[Docker-Content-Digest]'
+        - name: REGISTRY_STORAGE_DELETE_ENABLED
+          value: 'true'
+        volumeMounts:
+        - name: registry-volume
+          mountPath: /images
+        - name: setup
+          mountPath: /auth

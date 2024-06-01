@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: registry-svc
+  name: registry-svc
+  namespace: dev
+spec:
+  ports:
+  - name: ports
+    port: 80
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: registry-deployment
+
+

@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-ingress
+  labels:
+    lb: alb
+  namespace: dev
+  annotations:
+    # Name of Load Balancer
+    alb.ingress.kubernetes.io/load-balancer-name: "myloadbalancer"
+    # Type of Target
+    alb.ingress.kubernetes.io/target-type: "instance"
+    # Type of Load Balancer
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    # Health Check settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+    alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '10'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/success-codes: '200'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    # SSL certificate - we don't need below line if we are using HOST PATH ROUTING - just like in this case
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:138250738702:certificate/60f210a4-9309-46f5-ac72-9e987227fef9
+    # Ports
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443},{"HTTP": 80}]'
+    # Auto redirect to SSL - 443
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    # Route53 - ExternalDNS will create below records in Route 53 and points to ALB which is created by this ingress
+    # external-dns.alpha.kubernetes.io/hostname: visit.registry.ankit.study
+
+spec:
+  ingressClassName: alb
+  rules:
+  - host: images.ankit.study
+    http:
+      paths:  # Context Path order is sensitive here (means it checks first path then second like that)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ui-svc
+            port:
+              number: 80

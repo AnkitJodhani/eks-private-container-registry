@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-configmap
+  namespace: dev
+data:
+  REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /images
+  REGISTRY_AUTH: "htpasswd"
+  REGISTRY_AUTH_HTPASSWD_REALM: "Registry Realm"
+  REGISTRY_AUTH_HTPASSWD_PATH: "/auth/credentials"

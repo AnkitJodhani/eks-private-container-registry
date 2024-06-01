@@ -1,0 +1,27 @@
+# ⚓ 📢 https://docs.aws.amazon.com/eks/latest/userguide/cni-network-policy.html
+# ⚓ 📢 https://kubernetes.io/docs/concepts/services-networking/network-policies/
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: registry-netpol
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: registry-deployment
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              ns: dev
+          podSelector:
+            matchLabels:
+              app: ui-deployment
+      ports:
+        - protocol: TCP
+          port: 5000
+  egress:
+    - {}
