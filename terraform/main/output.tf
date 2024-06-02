@@ -72,38 +72,42 @@ output "EKS_OIDC_CONNECT_PROVIDER_ARN_EXTRACT" {
 }
 
 # ⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉ 📢 Tools IRSA output ⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉⇉
-
-# Metrics server 
+/*
+# Metrics server
 output "HELM_METRICS_SERVER" {
   value = module.METRICS_SERVER.HELM_METRICS_SERVER
 }
-
-# EBS CSI Driver 
+*/
+/*
+# EBS CSI Driver
 output "AWS_EBS_DRIVER_ARN" {
   value = module.IAM_EBS_CSI.AWS_EBS_CSI_DRIVER_ARN
 }
+*/
 
-# EFS CSI Driver 
+# EFS CSI Driver
 output "AWS_EFS_DRIVER_ARN" {
   value = module.IAM_EFS_CSI.AWS_EFS_CSI_DRIVER_ARN
 }
 
-# AWS LBC 
+# AWS LBC
 output "HELM_LBC" {
   value = module.IAM_LBC.HELM_LBC
 }
 
-# External DNS 
+# External DNS
 output "HELM_EXTERNALDNS" {
   value = module.IAM_EXTERNALDNS.HELM_EXTERNALDNS
 }
-
-# Cluster Autoscaler 
+/*
+# Cluster Autoscaler
 output "HELM_CLUSTER_AUTOSCALAR" {
   value = module.IAM_CLUSTER_AUTOSCALAR.HELM_CLUSTER_AUTOSCALAR
 }
-
-# Container Insight 
+*/
+/*
+# Container Insight
 output "AWS_CONTAINER_INSIGHT_DRIVER_ARN" {
   value = module.IAM_CONTAINER_INSIGHT.AWS_CONTAINER_INSIGHT_DRIVER_ARN
 }
+*/
