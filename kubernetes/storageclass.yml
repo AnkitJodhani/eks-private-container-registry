@@ -5,5 +5,5 @@ metadata:
 provisioner: efs.csi.aws.com
 parameters:
   provisioningMode: efs-ap
-  fileSystemId: "fs-0f74b436ae314bb76"
+  fileSystemId: "FILE_SYSTEM_ID" # put your EFS File System ID overhere
   directoryPerms: "700"
