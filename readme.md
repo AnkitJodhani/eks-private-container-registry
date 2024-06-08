@@ -14,7 +14,7 @@ Understanding the architecture of the project simplifies the process and boosts 
 
 Please go through my blog to get more detailed setup by step by instuction
 
-- **Blog:** [🔗 Links]()
+- **Blog:** [🔗 Links](https://blog.ankitjodhani.com/deploy-a-private-docker-container-registry-on-kubernetes-eks/)
 
 ## 🙌 Conclusion
 
