@@ -30,7 +30,7 @@ In this project, we deployed a private Docker container registry on AWS EKS. We 
 
 If you have any questions or feedback, feel free to reach out:
 
-- **LinkedIn:** [Ankit Jodhani](https://www.linkedin.com/in/ankitjodhani)
+- **LinkedIn:** [Ankit Jodhani](https://www.linkedin.com/in/ankit-jodhani/)
 - **GitHub:** [AnkitJodhani](https://github.com/AnkitJodhani)
 
 ---
